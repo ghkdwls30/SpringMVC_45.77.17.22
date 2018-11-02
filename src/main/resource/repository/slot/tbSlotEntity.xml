@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sample.vue.slot.model.SlotEntity">
+
+	<resultMap type="SlotEntity" id="resultMap">
+		<id property="slotId" column="SlotEntity_slotId"/>
+		<result property="account" column="SlotEntity_account" />
+		<result property="searchKw" column="SlotEntity_searchKw" />
+		<result property="exposeKw" column="SlotEntity_exposeKw" />
+		<result property="type" column="SlotEntity_type" />
+		<result property="modifiedAt" column="SlotEntity_modifiedAt" />
+		<result property="createdAt" column="SlotEntity_createdAt" />
+		<result property="ranking" column="SlotEntity_ranking" />
+		<result property="rankTot" column="SlotEntity_rankTot" />
+		<result property="status" column="SlotEntity_status" />
+	</resultMap>
+
+	<sql id="column">
+		<bind name="alias" value="''"/><include refid="com.sample.vue.slot.model.SlotEntity.aliasColumn" />	
+	</sql>
+	
+	<sql id="aliasColumn">
+		 ${alias}SLOT_ID AS SlotEntity_slotId
+		,${alias}ACCOUNT AS SlotEntity_account
+		,${alias}SEARCH_KW AS SlotEntity_searchKw
+		,${alias}EXPOSE_KW AS SlotEntity_exposeKw
+		,${alias}TYPE AS SlotEntity_type
+		,${alias}CREATED_AT AS SlotEntity_createdAt
+		,${alias}MODIFIED_AT AS SlotEntity_modifiedAt
+		,${alias}RANKING AS SlotEntity_ranking
+		,${alias}RANK_TOT AS SlotEntity_rankTot
+		,${alias}STATUS AS SlotEntity_status 
+	</sql>
+	
+	<sql id="pkCond">
+		AND SLOT_ID = #{entity.slotId}
+	</sql>
+	
+	<sql id="tableName">
+		TB_SLOT
+	</sql>
+	
+</mapper>

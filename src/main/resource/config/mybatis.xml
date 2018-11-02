@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-config.dtd">
+    
+<configuration>
+    <settings>
+        <!-- http://www.mybatis.org/mybatis-3/ko/configuration.html -->
+        <setting name="cacheEnabled" value="true"/>
+        <setting name="lazyLoadingEnabled" value="false"/>
+        <setting name="multipleResultSetsEnabled" value="true"/>
+        <setting name="useColumnLabel" value="true"/>
+        <setting name="useGeneratedKeys" value="false"/>
+        <setting name="defaultExecutorType" value="SIMPLE"/>
+        <setting name="defaultStatementTimeout" value="25000"/>
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+        <setting name="jdbcTypeForNull" value="VARCHAR"/>
+        <!-- <setting name="callSettersOnNulls" value="true" /> -->
+    </settings>
+    
+    <typeAliases>
+    	<!-- Entity  -->
+        <typeAlias alias="UserEntity" type="com.sample.vue.user.model.UserEntity"/>
+        <typeAlias alias="SlotEntity" type="com.sample.vue.slot.model.SlotEntity"/>
+        <typeAlias alias="RankQueueEntity" type="com.sample.vue.rankqueue.model.RankQueueEntity"/>
+        <typeAlias alias="BoardEntity" type="com.sample.vue.board.model.BoardEntity"/>
+        
+        
+        <!-- Tuple  -->
+        <typeAlias alias="UserDetailTuple" type="com.sample.vue.user.model.UserDetailTuple"/>
+    </typeAliases>
+ 
+	<plugins>
+        <plugin interceptor="com.github.pagehelper.PageHelper">
+            <property name="dialect" value="mysql"/>
+        </plugin>
+    </plugins>
+	
+</configuration>
+
+

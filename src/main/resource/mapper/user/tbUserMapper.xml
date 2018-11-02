@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sample.vue.user.repository.UserMapper">
+
+	<!-- 유저상세  -->
+	<resultMap type="UserDetailTuple" id="userDetailTuple">
+		<id property="userEntity.id" column="UserEntity_id"/>
+		<result property="remainMobileSearchSlotCnt" column="remainMobileSearchSlotCnt" />
+		<result property="remainAutoSlotCnt" column="remainAutoSlotCnt" />
+		<result property="remainRelSlotCnt" column="remainRelSlotCnt" />
+		<association property="userEntity" resultMap="com.sample.vue.user.model.UserEntity.resultMap" />
+	</resultMap>
+
+	<select id="selectUser" resultMap="com.sample.vue.user.model.UserEntity.resultMap">
+		SELECT 
+		 	<bind name="alias" value="'U.'"/><include refid="com.sample.vue.user.model.UserEntity.aliasColumn" />
+	     FROM TB_USER U
+	    WHERE 1 = 1 
+	      AND U.ACCOUNT = #{account}
+	      AND U.PASSWORD = #{password}
+	    LIMIT 1 
+	</select>
+	
+	<select id="selectUserList" resultMap="com.sample.vue.user.model.UserEntity.resultMap">
+		SELECT 
+			<bind name="alias" value="'U.'"/><include refid="com.sample.vue.user.model.UserEntity.aliasColumn" />
+		 FROM TB_USER U
+		 WHERE 1 = 1
+		   <if test="searchKeyword != null and !searchKeyword.equals('')">
+			   AND ACCOUNT like '%${searchKeyword}%'
+			    OR NAME like '%${searchKeyword}%'
+		   </if>
+	</select>
+	
+	<select id="selectUserByAccountAndPassword" resultMap="com.sample.vue.user.model.UserEntity.resultMap">
+		SELECT 
+			<bind name="alias" value="'U.'"/><include refid="com.sample.vue.user.model.UserEntity.aliasColumn" />
+		 FROM TB_USER U
+		 WHERE 1 = 1
+	       AND ACCOUNT = #{account}
+		   AND PASSWORD = #{password}
+		   AND U.STARTED_AT <![CDATA[ <= ]]> NOW()
+		   AND U.ENDED_AT <![CDATA[ >= ]]> NOW()
+	</select>
+	
+	
+	<select id="selectUserListCnt" resultType="Integer">
+		SELECT 
+		 	COUNT(*)
+	     FROM TB_USER
+	</select>
+	
+	<select id="selectAllUserList" resultMap="com.sample.vue.user.model.UserEntity.resultMap">
+		SELECT 
+		 	<bind name="alias" value="'U.'"/><include refid="com.sample.vue.user.model.UserEntity.aliasColumn" />
+	     FROM TB_USER U
+	</select>
+	
+	<select id="selectDetailUser" resultMap="userDetailTuple">
+		SELECT 
+		 	<bind name="alias" value="'U.'"/><include refid="com.sample.vue.user.model.UserEntity.aliasColumn" />
+		 	,IFNULL(U.MOBILE_SEARCH_SLOT_CNT, 0) - (SELECT COUNT(1) FROM TB_SLOT S WHERE S.ACCOUNT = #{account} AND S.TYPE = 'MS' AND S.STATUS = 'A') AS remainMobileSearchSlotCnt
+		 	,IFNULL(U.AUTO_SLOT_CNT, 0) - (SELECT COUNT(1) FROM TB_SLOT S WHERE S.ACCOUNT = #{account} AND S.TYPE = 'A' AND S.STATUS = 'A') AS remainAutoSlotCnt
+		 	,IFNULL(U.REL_SLOT_CNT, 0) - (SELECT COUNT(1) FROM TB_SLOT S WHERE S.ACCOUNT = #{account} AND S.TYPE = 'R' AND S.STATUS = 'A') AS remainRelSlotCnt 
+	     FROM TB_USER U
+	    WHERE 1 = 1 
+	      AND U.ACCOUNT = #{account}
+	    LIMIT 1 
+	</select>
+	
+	
+	
+	
+<!-- 	<select id="selectDetailUser" resultMap="userDetailTuple"> -->
+<!-- 		SELECT  -->
+<!-- 			<bind name="alias" value="'U.'"/><include refid="com.sample.vue.user.model.UserEntity.aliasColumn" /> -->
+<!-- 			,<bind name="alias" value="'G.'"/><include refid="com.sample.vue.group.model.GroupEntity.aliasColumn" /> -->
+<!-- 		  FROM TB_USER U -->
+<!-- 		  INNER JOIN TB_GROUP G ON U.GROUP_ID = G.ID 		   -->
+<!-- 		  WHERE 1 = 1  -->
+<!-- 		    AND U.ID = #{id} -->
+<!-- 	</select> -->
+	
+
+	
+<!-- 	<select id="selectUserDetailList" resultMap="userDetailTuple"> -->
+<!-- 		SELECT  -->
+<!-- 			<bind name="alias" value="'U.'"/><include refid="com.sample.vue.user.model.UserEntity.aliasColumn" /> -->
+<!-- 			,<bind name="alias" value="'G.'"/><include refid="com.sample.vue.group.model.GroupEntity.aliasColumn" /> -->
+<!-- 		  FROM TB_USER U -->
+<!-- 		  INNER JOIN TB_GROUP G ON U.GROUP_ID = G.ID 		   -->
+<!-- 	</select> -->
+</mapper>

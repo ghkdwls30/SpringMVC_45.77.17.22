@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sample.vue.user.repository.UserRepository">
+
+	<insert id="insert" useGeneratedKeys="true" keyProperty="entity.account" parameterType="UserEntity">
+		INSERT INTO <include refid="com.sample.vue.user.model.UserEntity.tableName"></include> VALUES( 
+			 #{entity.account}
+			,#{entity.password}
+			,#{entity.name}
+			,STR_TO_DATE(#{entity.startedAt}, '%Y%m%d%H%i%s')
+			,STR_TO_DATE(#{entity.endedAt}, '%Y%m%d%H%i%s')
+			,#{entity.type}
+			,NOW()
+			,NOW()
+			,#{entity.company}
+			,#{entity.mobileSearchSlotCnt}
+			,#{entity.autoSlotCnt}
+			,#{entity.relSlotCnt}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE <include refid="com.sample.vue.user.model.UserEntity.tableName"></include>
+		<set>
+			<if test="entity.account != null">ACCOUNT = #{entity.account},</if>
+			<if test="entity.password != null">PASSWORD = #{entity.password},</if>
+			<if test="entity.name != null">NAME = #{entity.name},</if>
+			<if test="entity.startedAt != null">STARTED_AT = #{entity.startedAt},</if>
+			<if test="entity.endedAt != null"> ENDED_AT = #{entity.endedAt},</if>
+			<if test="entity.type != null"> TYPE = #{entity.type},</if>
+			<if test="entity.modifiedAt != null"> MODIFIED_AT = #{entity.modifiedAt},</if>
+			<if test="entity.createdAt != null"> CREATED_AT = #{entity.createdAt},</if>
+			<if test="entity.company != null"> COMPANY = #{entity.company},</if>
+			<if test="entity.mobileSearchSlotCnt != null"> MOBILE_SEARCH_SLOT_CNT = #{entity.mobileSearchSlotCnt},</if>
+			<if test="entity.autoSlotCnt != null"> AUTO_SLOT_CNT = #{entity.autoSlotCnt},</if>
+			<if test="entity.relSlotCnt != null"> REL_SLOT_CNT = #{entity.relSlotCnt}</if>
+		</set>
+ 		WHERE 1 = 1
+ 		<include refid="com.sample.vue.user.model.UserEntity.pkCond"></include>    
+	</update>
+
+	<delete id="delete">	
+		DELETE 
+		  FROM <include refid="com.sample.vue.user.model.UserEntity.tableName"></include>
+		 WHERE 1 = 1
+		<include refid="com.sample.vue.user.model.UserEntity.pkCond"></include>        
+	</delete>
+	
+	<select id="selectOne" resultMap="com.sample.vue.user.model.UserEntity.resultMap">	
+		SELECT
+		    <include refid="com.sample.vue.user.model.UserEntity.column" />
+		  FROM <include refid="com.sample.vue.user.model.UserEntity.tableName"></include>
+		 WHERE 1 = 1
+		<include refid="com.sample.vue.user.model.UserEntity.pkCond"></include>    
+	</select>
+	
+</mapper>

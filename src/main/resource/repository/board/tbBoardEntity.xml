@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sample.vue.board.model.BoardEntity">
+
+	<resultMap type="BoardEntity" id="resultMap">
+		<id property="seq" column="BoardEntity_seq"/>
+		<result property="content" column="BoardEntity_content" />
+		<result property="modifiedAt" column="BoardEntity_modfiedAt" />
+	</resultMap>
+
+	<sql id="column">
+		<bind name="alias" value="''"/><include refid="com.sample.vue.board.model.BoardEntity.aliasColumn" />	
+	</sql>
+	
+	<sql id="aliasColumn">
+		 ${alias}SEQ AS BoardEntity_seq
+		,${alias}CONTENT AS BoardEntity_content
+		,${alias}MODIFIED_AT AS BoardEntity_modfiedAt
+	</sql>
+	
+	<sql id="pkCond">
+		AND SEQ = #{entity.seq}
+	</sql>
+	
+	<sql id="tableName">
+		TB_BOARD
+	</sql>
+	
+</mapper>

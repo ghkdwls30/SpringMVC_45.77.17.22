@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sample.vue.rankqueue.repository.RankQueueRepository">
+
+	<insert id="insert" useGeneratedKeys="true" keyProperty="entity.slotId" parameterType="RankQueueEntity">
+		INSERT INTO <include refid="com.sample.vue.rankqueue.model.RankQueueEntity.tableName"></include> 
+		(
+			SLOT_ID
+		)
+		VALUES
+		( 
+			#{entity.slotId}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE <include refid="com.sample.vue.rankqueue.model.RankQueueEntity.tableName"></include>
+		<set>
+			<if test="entity.seq != null">SEQ = #{entity.seq},</if>
+			<if test="entity.slotId != null">SLOT_ID = #{entity.slotId},</if>
+		</set>
+ 		WHERE 1 = 1
+ 		<include refid="com.sample.vue.rankqueue.model.RankQueueEntity.pkCond"></include>    
+	</update>
+
+	<delete id="delete">	
+		DELETE 
+		  FROM <include refid="com.sample.vue.rankqueue.model.RankQueueEntity.tableName"></include>
+		 WHERE 1 = 1
+		<include refid="com.sample.vue.rankqueue.model.RankQueueEntity.pkCond"></include>        
+	</delete>
+	
+	<select id="selectOne" resultMap="com.sample.vue.rankqueue.model.RankQueueEntity.resultMap">	
+		SELECT
+		    <include refid="com.sample.vue.rankqueue.model.RankQueueEntity.column" />
+		  FROM <include refid="com.sample.vue.rankqueue.model.RankQueueEntity.tableName"></include>
+		 WHERE 1 = 1
+		<include refid="com.sample.vue.rankqueue.model.RankQueueEntity.pkCond"></include>    
+	</select>
+	
+</mapper>

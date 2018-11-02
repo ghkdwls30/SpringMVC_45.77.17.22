@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sample.vue.slot.repository.SlotMapper">
+
+
+	<sql id="selectSlotList-flag">
+	 		<if test="account != null and !account.equals('') and !isAdmin">
+		   		AND ACCOUNT = #{account}
+		   </if>
+		   <if test="searchType != null and !searchType.equals('')">
+		   		AND TYPE = #{searchType}
+		   </if>
+		   <if test="searchFilter != null and !searchFilter.equals('')">
+		   		<if test="searchFilter.equals('filter1')">
+		   		 	AND SLOT_ID like '%${searchKeyword}%'
+		   		</if>
+		   		<if test="searchFilter.equals('filter2')">
+		   			AND SEARCH_KW like '%${searchKeyword}%'
+		   		</if>
+		   		<if test="searchFilter.equals('filter3')">
+		   			AND EXPOSE_KW like '%${searchKeyword}%'
+		   		</if>
+		   		<if test="searchFilter.equals('filter4')">
+		   			AND ACCOUNT like '%${searchKeyword}%'
+		   		</if>
+		   </if>
+	</sql>
+
+	<select id="selectSlotList" resultMap="com.sample.vue.slot.model.SlotEntity.resultMap">
+		SELECT 
+			<bind name="alias" value="'S.'"/><include refid="com.sample.vue.slot.model.SlotEntity.aliasColumn" />
+		 FROM TB_SLOT S
+		 WHERE 1 = 1
+		 <include refid="selectSlotList-flag"></include>
+	</select>
+	
+	
+	<select id="selectSlotExcelList" resultType="map">
+		SELECT 
+			S.SLOT_ID AS COL1
+		   ,CASE 
+		     WHEN S.TYPE = 'A' THEN '자동완성'
+		     WHEN S.TYPE = 'MS' THEN '모바일 통합 검색'
+		     WHEN S.TYPE = 'R' THEN '연관검색어' 
+		    END AS COL2
+		   ,S.SEARCH_KW AS COL3
+		   ,S.EXPOSE_KW AS COL4
+		    ,CASE 
+		   		WHEN CONCAT(S.RANKING, '/', S.RANK_TOT) = '0/0' THEN '*' 
+		   		ELSE CONCAT(S.RANKING, '/', S.RANK_TOT)
+		   	END AS COL5
+		   ,S.ACCOUNT AS COL6
+		   ,S.CREATED_AT AS COL7
+		   ,S.CREATED_AT AS COL8
+		   ,CASE
+		   		WHEN S.STATUS = 'A' THEN '정상'
+		   		ELSE '사용중지'
+		   	END AS COL9
+		 FROM TB_SLOT S
+		 WHERE 1 = 1
+		   <include refid="selectSlotList-flag"></include>
+	</select>
+	
+	
+	<select id="selectSlotListCnt" resultType="Integer">
+		SELECT 
+		 	COUNT(*)
+	     FROM TB_SLOT 
+	</select>
+	
+	<select id="disableSlotCntMap" resultType="map">
+		SELECT 
+		 	 (SELECT COUNT(1) FROM TB_SLOT S WHERE S.ACCOUNT = #{account} AND S.TYPE = 'MS' AND S.STATUS = 'A') - IFNULL(U.MOBILE_SEARCH_SLOT_CNT, 0) AS disableMobileSearchSlotCnt
+		 	 , (SELECT COUNT(1) FROM TB_SLOT S WHERE S.ACCOUNT = #{account} AND S.TYPE = 'A' AND S.STATUS = 'A') - IFNULL(U.AUTO_SLOT_CNT, 0) AS disableAutoSlotCnt
+		 	 , (SELECT COUNT(1) FROM TB_SLOT S WHERE S.ACCOUNT = #{account} AND S.TYPE = 'R' AND S.STATUS = 'A') - IFNULL(U.REL_SLOT_CNT, 0) AS disableRelSlotCnt
+	     FROM TB_USER U
+	    WHERE 1 = 1 
+	      AND U.ACCOUNT = #{account}
+	</select>
+	
+	
+	<update id="disableSlot">
+		UPDATE TB_SLOT S 
+		   SET S.STATUS = 'D', S.MODIFIED_AT = NOW()
+		 WHERE S.SLOT_ID IN (
+		 	SELECT TEMP.SLOT_ID FROM (
+			 	SELECT SLOT_ID 
+			 	  FROM TB_SLOT X 
+			 	 WHERE X.TYPE = #{type}
+			 	   AND X.ACCOUNT = #{account}
+			 	   AND X.STATUS = 'A'
+			 	 ORDER BY X.CREATED_AT ASC 
+			 	 LIMIT ${cnt}
+			) TEMP
+		 )
+	</update>
+	
+	
+	
+</mapper>

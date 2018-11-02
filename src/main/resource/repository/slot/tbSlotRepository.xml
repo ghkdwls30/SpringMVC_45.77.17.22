@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sample.vue.slot.repository.SlotRepository">
+
+	<insert id="insert" useGeneratedKeys="true" keyProperty="entity.slotId" parameterType="SlotEntity">
+		INSERT INTO <include refid="com.sample.vue.slot.model.SlotEntity.tableName"></include> 
+		(
+			ACCOUNT
+			,SEARCH_KW
+			,EXPOSE_KW
+			,TYPE
+			,CREATED_AT
+			,MODIFIED_AT
+			,RANKING
+			,RANK_TOT
+			,STATUS
+		)
+		VALUES
+		( 
+			#{entity.account}
+			,#{entity.searchKw}
+			,#{entity.exposeKw}
+			,#{entity.type}
+			,NOW()
+			,NOW()
+			,#{entity.ranking}
+			,#{entity.rankTot}
+			,'A'
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE <include refid="com.sample.vue.slot.model.SlotEntity.tableName"></include>
+		<set>
+			<if test="entity.slotId != null">SLOT_ID = #{entity.slotId},</if>
+			<if test="entity.account != null">ACCOUNT = #{entity.account},</if>
+			<if test="entity.searchKw != null">SEARCH_KW = #{entity.searchKw},</if>
+			<if test="entity.exposeKw != null">EXPOSE_KW = #{entity.exposeKw},</if>
+			<if test="entity.type != null">TYPE = #{entity.type},</if>
+			<if test="entity.createdAt != null"> CREATED_AT = #{entity.createdAt},</if>			
+			<if test="entity.ranking != null"> RANKING = #{entity.ranking},</if>
+			<if test="entity.rankTot != null"> RANK_TOT = #{entity.rankTot},</if>
+			<if test="entity.status != null"> STATUS = #{entity.status},</if>
+			MODIFIED_AT = NOW()
+		</set>
+ 		WHERE 1 = 1
+ 		<include refid="com.sample.vue.slot.model.SlotEntity.pkCond"></include>    
+	</update>
+
+	<delete id="delete">	
+		DELETE 
+		  FROM <include refid="com.sample.vue.slot.model.SlotEntity.tableName"></include>
+		 WHERE 1 = 1
+		<include refid="com.sample.vue.slot.model.SlotEntity.pkCond"></include>        
+	</delete>
+	
+	<select id="selectOne" resultMap="com.sample.vue.slot.model.SlotEntity.resultMap">	
+		SELECT
+		    <include refid="com.sample.vue.slot.model.SlotEntity.column" />
+		  FROM <include refid="com.sample.vue.slot.model.SlotEntity.tableName"></include>
+		 WHERE 1 = 1
+		<include refid="com.sample.vue.slot.model.SlotEntity.pkCond"></include>    
+	</select>
+	
+</mapper>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sample.vue.rankqueue.repository.RankQueueMapper">
+
+
+	<delete id="deleteBySlotId">
+		DELETE FROM TB_RANK_QUEUE WHERE SLOT_ID = #{slotId}
+	</delete>	
+	
+	<select id="selectRankQueueList" resultType="map">
+		SELECT S.SLOT_ID slotId, S.SEARCH_KW searchKw, S.EXPOSE_KW exposeKw 
+		  FROM TB_RANK_QUEUE Q, TB_SLOT S
+		 WHERE 1 = 1 
+		   AND Q.SLOT_ID = S.SLOT_ID
+		   AND S.STATUS = 'A'
+	</select>
+	
+	
+</mapper>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sample.vue.user.model.UserEntity">
+
+	<resultMap type="UserEntity" id="resultMap">
+		<id property="account" column="UserEntity_account"/>
+		<result property="company" column="UserEntity_company" />
+		<result property="password" column="UserEntity_password" />
+		<result property="name" column="UserEntity_name" />
+		<result property="startedAt" column="UserEntity_startedAt" />
+		<result property="endedAt" column="UserEntity_endedAt" />
+		<result property="type" column="UserEntity_type" />
+		<result property="modifiedAt" column="UserEntity_modifiedAt" />
+		<result property="createdAt" column="UserEntity_createdAt" />
+		<result property="mobileSearchSlotCnt" column="UserEntity_mobileSearchSlotCnt" />
+		<result property="autoSlotCnt" column="UserEntity_autoSlotCnt" />
+		<result property="relSlotCnt" column="UserEntity_relSlotCnt" />
+	</resultMap>
+
+	<sql id="column">
+		<bind name="alias" value="''"/><include refid="com.sample.vue.user.model.UserEntity.aliasColumn" />	
+	</sql>
+	
+	<sql id="aliasColumn">
+		 ${alias}ACCOUNT AS UserEntity_account
+		,${alias}PASSWORD AS UserEntity_password
+		,${alias}NAME AS UserEntity_name
+		,${alias}STARTED_AT AS UserEntity_startedAt
+		,${alias}ENDED_AT AS UserEntity_endedAt
+		,${alias}TYPE AS UserEntity_type
+		,${alias}MODIFIED_AT AS UserEntity_modifiedAt
+		,${alias}CREATED_AT AS UserEntity_createdAt
+		,${alias}COMPANY AS UserEntity_company
+		,${alias}MOBILE_SEARCH_SLOT_CNT AS UserEntity_mobileSearchSlotCnt 
+		,${alias}AUTO_SLOT_CNT AS UserEntity_autoSlotCnt 
+		,${alias}REL_SLOT_CNT AS UserEntity_relSlotCnt  
+	</sql>
+	
+	<sql id="pkCond">
+		AND ACCOUNT = #{entity.account}
+	</sql>
+	
+	<sql id="tableName">
+		TB_USER
+	</sql>
+	
+</mapper>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sample.vue.rankqueue.model.RankQueueEntity">
+
+	<resultMap type="RankQueueEntity" id="resultMap">
+		<id property="seq" column="RankQueueEntity_seq"/>
+		<result property="slotId" column="RankQueueEntity_slotId" />
+	</resultMap>
+
+	<sql id="column">
+		<bind name="alias" value="''"/><include refid="com.sample.vue.rankqueue.model.RankQueueEntity.aliasColumn" />	
+	</sql>
+	
+	<sql id="aliasColumn">
+		 ${alias}SEQ AS RankQueueEntity_seq
+		,${alias}SLOT_ID AS RankQueueEntity_slotId 
+	</sql>
+	
+	<sql id="pkCond">
+		AND SEQ = #{entity.seq}
+	</sql>
+	
+	<sql id="tableName">
+		TB_RANK_QUEUE
+	</sql>
+	
+</mapper>
